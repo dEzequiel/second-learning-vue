@@ -1,40 +1,65 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { defineProps } from 'vue';
 
 export default defineComponent({
+
+  props: {
+    id: {
+      type: String,
+      require: true
+    },
+    isFavorite: {
+      type: Boolean,
+      default: false,
+      require: true,
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    phone: {
+      type: String,
+    },
+    email: {
+      type: String,
+      required: true
+    }
+  },
+
   data() {
     return {
       isVisible: false,
-      friend: {
-        id: "manuel",
-        name: "Manuel Lorenz",
-        phone: "0123 45678 90",
-        email: "manuel@localhost.com",
-      }
     };
   },
 
   methods: {
     toggleDetails() {
       this.isVisible = !this.isVisible;
-    }
-  }
+    },
+    changeFavoriteValue() {
+      // Permite hacer un evento personalizado que puedes ejecutar desde el componente padre. Recibe como primer parametro el
+      // nombre del evento y como adicionales los datos que devolvera.
+      this.$emit('change-favorite', this.id); //convecion: kebap-case
+    },
+  },
 });
 
 </script>
 
 <template>
   <li>
-    <h2>{{ friend.name }}</h2>
+    <h2>{{ name }} {{ isFavorite ? '(Favorite)' : '' }}</h2>
     <button @click="toggleDetails">{{ isVisible ? 'Hide' : 'Show' }} Details</button>
+    <button @click="changeFavoriteValue">Change Favorite Prop</button>
     <ul v-if="isVisible">
       <li>
         <strong>Phone:</strong>
-        {{ friend.phone }}
+        {{ phone }}
       </li>
       <li>
         <strong>Email:</strong>
-        {{ friend.email }}
+        {{ email }}
       </li>
     </ul>
   </li>
