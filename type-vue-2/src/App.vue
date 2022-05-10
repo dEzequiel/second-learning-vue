@@ -1,7 +1,10 @@
-<!-- <script lang="ts">
+<script lang="ts">
+import { walkIdentifiers } from '@vue/compiler-core';
 import { defineComponent } from 'vue';
+import FriendContact from './components/FriendContact.vue';
 
-export default  defineComponent({
+export default defineComponent({
+  components: { FriendContact },
   data() {
     return {
       friends: [
@@ -10,19 +13,28 @@ export default  defineComponent({
           name: "Manuel Lorenz",
           phone: "0123 45678 90",
           email: "manuel@localhost.com",
+          isFavorite: true
         },
         {
           id: "julie",
           name: "Julie Jones",
           phone: "0987 654421 21",
           email: "julie@localhost.com",
+          isFavorite: false
         },
       ],
     };
   },
+
+  methods: {
+    toggleFavorite(friendId: string) {
+      const identifier = this.friends.find(friend => friend.id === friendId);
+      identifier!.isFavorite = !identifier?.isFavorite
+    }
+  }
 });
 
-</script> -->
+</script>
 
 <template>
   <section>
@@ -30,8 +42,15 @@ export default  defineComponent({
       <h1>My Friends</h1>
     </header>
     <ul>
-      <friend-contact></friend-contact>
-      <friend-contact></friend-contact>
+      <friend-contact
+      v-for="friend in friends" :key="friend.id"
+      :id="friend.id"
+      :name="friend.name"
+      :phone="friend.phone"
+      :email="friend.email"
+      :isFavorite="friend.isFavorite"
+      @change-favorite="toggleFavorite">
+      </friend-contact>
     </ul>
   </section>
 </template>
